@@ -14,6 +14,7 @@ def main():
 		sys.exit(1)
 
 	counts_processor.Counts(options)
+	counts_processor.Breakdown(options)
 
 if __name__ == '__main__':
 	main()

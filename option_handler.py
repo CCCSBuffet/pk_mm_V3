@@ -39,6 +39,8 @@ def CollectOptions() -> dict:
 		'start_month=',
 		'end_month=',
 		'counts',
+		'breakdown',
+		'term=',
 		'quiet',
 		'graph'
 	]
@@ -49,7 +51,9 @@ def CollectOptions() -> dict:
 	o['folder'] = ''
 	o['start_month'] = ''
 	o['end_month'] = ''
+	o['term'] = ''
 	o['do_counts'] = False
+	o['do_breakdown'] = False
 	o['quiet'] = False
 	o['graph'] = False
 
@@ -72,8 +76,12 @@ def CollectOptions() -> dict:
 			o['start_month'] = arg.strip() + '.csv'
 		elif opts in ('--end_month'):
 			o['end_month'] = arg.strip() + '.csv'
+		elif opts in ('--term'):
+			o['term'] = arg.strip()
 		elif opts in ('--counts'):
 			o['do_counts'] = True
+		elif opts in ('--breakdown'):
+			o['do_breakdown'] = True
 		elif opts in ('--quiet'):
 			o['quiet'] = True
 		elif opts in ('--graph'):
@@ -87,6 +95,11 @@ def CollectOptions() -> dict:
 	if o['major'] == '':
 		print('Error: --major must be specified.', file=sys.stderr)
 		__PrintHelp()
+		sys.exit(1)
+
+	terms = ('j-term', 'fall', 'spring', 'summer')
+	if o['term'] != '' and o['term'] not in terms:
+		print('Error: term must be one of', terms, file=sys.stderr)
 		sys.exit(1)
 
 	if o['minor'] == '':
