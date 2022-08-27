@@ -3,22 +3,32 @@ import sys
 
 def __PrintHelp(print_newline = True):
 	options = [
-		('--option', 'argument', 'meaning'),
-		('help', 'none', 'prints this help text'),
-		('folder', 'path to folder', 'required - specifies path to folder containing the data'),
-		('major', 'name of major', 'required - specifies major of focus - use double quotes if major contains spaces'),
+		('--option', 'argument',     'meaning'),
+		('help',   'none',           'prints this help text'),
+		('folder', 'path to folder', 'required - specifies path to folder'),
+		('',       '',               'containing the data'),
+		('major',  'name of major',  'required - specifies major of focus'),
+		('',       '',               'use double quotes if major contains spaces'),
 		('', '', ''),
-		('start_month', 'name of start month', 'for reports that have a definable range of months, this is the start'),
-		('end_month', 'name of end month', 'for reports that have a definable range of months, this is the end'),
+		('start_month', 'name of start month', 'for reports that have a definable'),
+		('', '',                     'range of months, this is the start'),
+		('end_month', 'name of end month', 'for reports that have a definable'),
+		('', '',                     'range of months, this is the end'),
 		('', '', ''),
-		('counts', 'none', 'emits counts of majors and minors broken down by academic level'),
+		('counts', 'none',            'emits counts of majors and minors broken'),
+		('', '',                      'down by academic level'),
+		('', '', ''),
+		('graph', 'none',             'if a report knows how to produce a chart,'),
+		('', '',                      'adding this switches output from text to'),
+		('', '',                      'picture'),
+		('quiet', 'none',             'if given, text reports do not have headers'),
 	]
 	if print_newline:
 		print()
 
 	print('Usage:')
 	for l in options:
-		print('{:<16s}{:<24s}{:s}'.format(l[0], l[1], l[2]))
+		print('{:<14s}{:<21s}{:s}'.format(l[0], l[1], l[2]))
 
 def CollectOptions() -> dict:
 	short_opts = ''
@@ -29,7 +39,8 @@ def CollectOptions() -> dict:
 		'start_month=',
 		'end_month=',
 		'counts',
-		'quiet'
+		'quiet',
+		'graph'
 	]
 
 	o = { }
@@ -40,6 +51,7 @@ def CollectOptions() -> dict:
 	o['end_month'] = ''
 	o['do_counts'] = False
 	o['quiet'] = False
+	o['graph'] = False
 
 	try:
 		opts, _ = getopt(sys.argv[1:], short_opts, long_opts)
@@ -64,6 +76,8 @@ def CollectOptions() -> dict:
 			o['do_counts'] = True
 		elif opts in ('--quiet'):
 			o['quiet'] = True
+		elif opts in ('--graph'):
+			o['graph'] = True
 
 	if o['folder'] == '':
 		print('Error: --folder must be specified.', file=sys.stderr)
