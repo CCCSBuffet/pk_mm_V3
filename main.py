@@ -4,6 +4,7 @@ import file_name_processor
 import data_reader
 import counts_processor
 import pairing_processor
+import gpa_processor
 
 def main():
 	options = option_handler.CollectOptions()
@@ -18,6 +19,7 @@ def main():
 	counts_processor.Breakdown(options)
 	pairing_processor.MajorPairings(options)
 	pairing_processor.MinorPairings(options)
+	gpa_processor.GPA(options)
 
 if __name__ == '__main__':
 	main()

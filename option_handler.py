@@ -13,6 +13,8 @@ def __PrintHelp(print_newline = True):
 		('', '', ''),
 		('counts',      'none',      'emits counts of majors and minors broken down by academic level'),
 		('breakdown',   'none',      'emits breakdown of cohorts'),
+		('gpa',         'cohort',    'all, FF, SO, JR, SR'),
+		('gpa_le',      'float',     'modifies --gpa to show only GPAs <= value'),
 		('', '', ''),
 		('Pairings',    'none',      'emits double major counts'),
 		('pairings',    'none',      'emits counts of minors'),
@@ -36,6 +38,8 @@ def CollectOptions() -> dict:
 		'major=',
 		'start_month=',
 		'end_month=',
+		'gpa=',
+		'gpa_le=',
 		'counts',
 		'breakdown',
 		'term=',
@@ -56,6 +60,8 @@ def CollectOptions() -> dict:
 	o['do_breakdown'] = False
 	o['do_Pairings'] = False
 	o['do_pairings'] = False
+	o['do_gpa'] = ''
+	o['gpa_le'] = ''
 	o['quiet'] = False
 	o['graph'] = False
 
@@ -74,12 +80,18 @@ def CollectOptions() -> dict:
 			o['folder'] = arg.strip()
 		elif opts in ('--major'):
 			o['major'] = arg.strip()
+		elif opts in ('--minor'):
+			o['minor'] = arg.strip()
 		elif opts in ('--start_month'):
 			o['start_month'] = arg.strip() + '.csv'
 		elif opts in ('--end_month'):
 			o['end_month'] = arg.strip() + '.csv'
 		elif opts in ('--term'):
 			o['term'] = arg.strip()
+		elif opts in ('--gpa'):
+			o['do_gpa'] = arg.strip()
+		elif opts in ('--gpa_le'):
+			o['gpa_le'] = arg.strip()
 		elif opts in ('--counts'):
 			o['do_counts'] = True
 		elif opts in ('--breakdown'):
@@ -106,6 +118,20 @@ def CollectOptions() -> dict:
 	terms = ('j-term', 'fall', 'spring', 'summer')
 	if o['term'] != '' and o['term'] not in terms:
 		print('Error: term must be one of', terms, file=sys.stderr)
+		sys.exit(1)
+
+	allowable_cohorts = ('FF', 'SO', 'JR', 'SR', 'all')
+	if o['do_gpa'] != '' and o['do_gpa'] not in allowable_cohorts:
+		print('--gpa with invalid cohort', file=sys.stderr)
+		__PrintHelp()
+		sys.exit(1)
+	
+	if o['do_gpa'] != '' and o['graph']:
+		print('--gpa does not have a corresponding graph', file=sys.stderr)
+		sys.exit(1)
+
+	if o['do_gpa'] == '' and o['gpa_le'] != '':
+		print('--gpa_le requires --gpa', file=sys.stderr)
 		sys.exit(1)
 
 	if o['minor'] == '':
