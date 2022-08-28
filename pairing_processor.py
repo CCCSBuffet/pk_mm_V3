@@ -15,7 +15,12 @@ def MajorPairings(o):
             print('{:<24} '.format(key[1]), end='')
             print('{:<6}'.format(pairings[key]))
     else:
-        __MakeMajorChart(o, pairings)
+        __MakeMajorChart(o, 
+            pairings, 
+            'double_majors.png',
+            'No Double Major',
+            'Double Majors'
+        )
         
 def MinorPairings(o):
     if not o['do_pairings']:
@@ -35,6 +40,13 @@ def MinorPairings(o):
         print('{:<24s}{:5}'.format('Majors with one minors', counts[1]))
         print('{:<24s}{:5}'.format('Majors with two minors', counts[2]))
         print('{:<24s}{:5}'.format('Majors with three minors', counts[3]))
+    else:
+        __MakeMajorChart(o, 
+            pairings, 
+            'minors.png',
+            'No Minor',
+            'Minors'
+        )
 
 def __CollectMajors(o) -> dict:
     pairings = {}
@@ -93,20 +105,30 @@ def __CollectMinors(o) -> dict:
     return pairings, counts
 
 
-def __MakeMajorChart(o, pairings):
-    pass
+def __MakeMajorChart(o, pairings, file_name, no_text, t):
+    labels = []
+    minors = []
+    values = []
+    month = int(o['end_month'][-6:-4])
+    year = int(int(o['end_month'][-11: -7]))
 
-
-'''
-# Pie chart, where the slices will be ordered and plotted counter-clockwise:
-labels = 'Frogs', 'Hogs', 'Dogs', 'Logs'
-sizes = [15, 30, 45, 10]
-explode = (0, 0.1, 0, 0)  # only "explode" the 2nd slice (i.e. 'Hogs')
-
-fig1, ax1 = plt.subplots()
-ax1.pie(sizes, explode=explode, labels=labels, autopct='%1.1f%%',
-        shadow=True, startangle=90)
-ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
-
-plt.show()
-'''
+    l = list(pairings.keys())
+    l.sort()
+    total = 0
+    for key in l:
+        minors.append(key[1] if key[1] != '' else no_text)
+        values.append(pairings[key])
+        total += pairings[key]
+    percentage = [ pairings[key] * 100.0 / total  for key in l]
+    labels = ['{0} - {1:1.2f} %'.format(s, p) for s, p in zip(minors, percentage) ]
+    fig1, ax1 = plt.subplots()
+    p = ax1.pie(values, startangle=90)
+    ax1.axis('equal')
+    plt.legend(p[0], labels, bbox_to_anchor=(1, 0.5), loc="right",
+               bbox_transform=plt.gcf().transFigure)
+    plt.subplots_adjust(left=0.0, bottom=0.1, right=0.575)
+    plt.suptitle(o['major'] + ' - ' + t + '\n' +
+                 str(month) + '/' + str(year) +
+                 ' Total ' + str(total), ha='right')
+    plt.savefig(file_name, bbox_inches='tight')
+    print(t, 'image saved with file name:', file_name)
