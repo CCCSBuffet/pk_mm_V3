@@ -29,7 +29,7 @@ def ReadData(o) -> bool:
 			break
 	return True
 
-def __DetermineTerm(mo) -> str:
+def DetermineTerm(mo) -> str:
 	if (mo == 1):
 		return 'j-term'
 	if (mo >= 2 and mo <= 5):
@@ -53,7 +53,7 @@ def __ProcessFile(o, f):
 		return
 	f = os.path.join(o['folder'], f)
 	month = int(f[-6:-4])
-	term = __DetermineTerm(month)
+	term = DetermineTerm(month)
 	year = int(f[-11: -7])
 	__MakeMonth(o, month, year, term)
 	with open(f, 'r') as file:
@@ -63,5 +63,5 @@ def __ProcessFile(o, f):
 
 
 def __ProcessMissingFile(o, month, year):
-	term = __DetermineTerm(month)
+	term = DetermineTerm(month)
 	__MakeMonth(o, month, year, term)

@@ -3,25 +3,23 @@ import sys
 
 def __PrintHelp(print_newline = True):
 	options = [
-		('--option', 'argument',     'meaning'),
-		('help',   'none',           'prints this help text'),
-		('folder', 'path to folder', 'required - specifies path to folder'),
-		('',       '',               'containing the data'),
-		('major',  'name of major',  'required - specifies major of focus'),
-		('',       '',               'use double quotes if major contains spaces'),
+		('option',      'argument',  'meaning'),
+		('help',        'none',      'prints this help text'),
+		('folder',      'path',      'required - specifies path to folder containing the data'),
+		('major',       'major',     'required - specifies major of focus'),
 		('', '', ''),
-		('start_month', 'name of start month', 'for reports that have a definable'),
-		('', '',                     'range of months, this is the start'),
-		('end_month', 'name of end month', 'for reports that have a definable'),
-		('', '',                     'range of months, this is the end'),
+		('start_month', 'file name', 'for reports that have a definable range of months, this is the start'),
+		('end_month',   'file name', 'for reports that have a definable range of months, this is the end'),
 		('', '', ''),
-		('counts', 'none',            'emits counts of majors and minors broken'),
-		('', '',                      'down by academic level'),
+		('counts',      'none',      'emits counts of majors and minors broken down by academic level'),
+		('breakdown',   'none',      'emits breakdown of cohorts'),
 		('', '', ''),
-		('graph', 'none',             'if a report knows how to produce a chart,'),
-		('', '',                      'adding this switches output from text to'),
-		('', '',                      'picture'),
-		('quiet', 'none',             'if given, text reports do not have headers'),
+		('Pairings',    'none',      'emits double major counts'),
+		('pairings',    'none',      'emits counts of minors'),
+		('', '', ''),
+		('graph',       'none',      'switch from text to graph, if possible'),
+		('term',        'term',      'for some reports, consider only the given term'),
+		('quiet',       'none',      'if given, text reports do not have headers'),
 	]
 	if print_newline:
 		print()
@@ -42,6 +40,8 @@ def CollectOptions() -> dict:
 		'breakdown',
 		'term=',
 		'quiet',
+		'Pairings',
+		'pairings',
 		'graph'
 	]
 
@@ -54,6 +54,8 @@ def CollectOptions() -> dict:
 	o['term'] = ''
 	o['do_counts'] = False
 	o['do_breakdown'] = False
+	o['do_Pairings'] = False
+	o['do_pairings'] = False
 	o['quiet'] = False
 	o['graph'] = False
 
@@ -86,6 +88,10 @@ def CollectOptions() -> dict:
 			o['quiet'] = True
 		elif opts in ('--graph'):
 			o['graph'] = True
+		elif opts in ('--Pairings'):
+			o['do_Pairings'] = True
+		elif opts in ('--pairings'):
+			o['do_pairings'] = True
 
 	if o['folder'] == '':
 		print('Error: --folder must be specified.', file=sys.stderr)

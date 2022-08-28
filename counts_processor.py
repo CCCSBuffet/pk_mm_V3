@@ -128,15 +128,6 @@ def __PrintMajorMinor(c, index):
 	it counts.
 '''
 
-__missing_month = [
-	0, 
-	'', 
-	0, 
-	None,
-	None,
-	None
-]
-
 def __GetRows(data, m) -> list:
 	rows = { }
 	for row in data:
