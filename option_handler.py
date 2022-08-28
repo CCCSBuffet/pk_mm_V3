@@ -15,6 +15,7 @@ def __PrintHelp(print_newline = True):
 		('breakdown',   'none',      'emits breakdown of cohorts'),
 		('gpa',         'cohort',    'all, FF, SO, JR, SR'),
 		('gpa_le',      'float',     'modifies --gpa to show only GPAs <= value'),
+		('email',       'cohort',    'synonym for --gpa'),
 		('', '', ''),
 		('Pairings',    'none',      'emits double major counts'),
 		('pairings',    'none',      'emits counts of minors'),
@@ -39,6 +40,7 @@ def CollectOptions() -> dict:
 		'start_month=',
 		'end_month=',
 		'gpa=',
+		'email=',
 		'gpa_le=',
 		'counts',
 		'breakdown',
@@ -88,7 +90,7 @@ def CollectOptions() -> dict:
 			o['end_month'] = arg.strip() + '.csv'
 		elif opts in ('--term'):
 			o['term'] = arg.strip()
-		elif opts in ('--gpa'):
+		elif opts in ('--gpa', '--email'):
 			o['do_gpa'] = arg.strip()
 		elif opts in ('--gpa_le'):
 			o['gpa_le'] = arg.strip()
@@ -131,7 +133,7 @@ def CollectOptions() -> dict:
 		sys.exit(1)
 
 	if o['do_gpa'] == '' and o['gpa_le'] != '':
-		print('--gpa_le requires --gpa', file=sys.stderr)
+		print('--gpa_le requires --gpa or --email', file=sys.stderr)
 		sys.exit(1)
 
 	if o['minor'] == '':
