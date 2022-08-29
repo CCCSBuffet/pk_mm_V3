@@ -76,7 +76,6 @@ def __GatherCounts(counts, o, year, term, month):
 	results = [year, term, month, {}, {}, [0, 0, 0]]
 	data = o['student_data'][year][term][month]
 	for row in data:
-		email = row['Carthage E-mail'].strip()
 		if o['major'] in [row['Major 1 Description'].strip(), row['Major 2 Description'].strip()]:
 			__ApplyLine(row, results[3])
 		if o['minor'] in [

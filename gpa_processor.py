@@ -21,19 +21,22 @@ def GPA(o):
 		if not o['quiet']:
 			print(__GetCohort(al))
 			print('{:<8s}'.format('ID'), end='')
-			print('{:<16s}'.format('Last Name'), end='')
-			print('{:<16s}'.format('First Name'), end='')
+			print('{:<20s}'.format('Last Name'), end='')
+			print('{:<20s}'.format('First Name'), end='')
 			print('{:<8s}'.format('Gender'), end='')
 			print('{:<8s}'.format('GPA'), end='')
 			print('{:<16s}'.format('Email'))
 		for s in data[al]:
 			if float(s[4]) <= gpa_limiter:
 				print('{:<8s}'.format(s[0]), end='')
-				print('{:<16s}'.format(s[1]), end='')
-				print('{:<16s}'.format(s[2]), end='')
+				print('{:<20s}'.format(s[1]), end='')
+				print('{:<20s}'.format(s[2]), end='')
 				print('{:<8s}'.format(s[3]), end='')
 				print('{:<8s}'.format(s[4]), end='')
-				print('{0}'.format(s[2] + ' ' + s[1] + '<' + s[5] + '>'))
+				if s[5] == 'N/A':
+					print(s[5])
+				else:
+					print('{0}'.format(s[2] + ' ' + s[1] + '<' + s[5] + '>'))
 
 
 def __GetAL(row) -> str:
@@ -74,7 +77,8 @@ def __CollectGPA(o):
 				row['First Name'].strip(),
 				row['Gender Code'] if 'Gender Code' in row.keys() else '-',
 				row['Cumulative GPA'].strip(),
-				row['Carthage E-mail'].strip()
+				row['Carthage E-mail'].strip() 
+					if 'Carthage E-mail' in row.keys() else "N/A"
 			])
 	#print(gpa)
 	return gpa

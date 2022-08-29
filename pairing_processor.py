@@ -7,12 +7,12 @@ def MajorPairings(o):
     pairings = __CollectMajors(o)
     if not o['graph']:
         if not o['quiet']:
-            print('{:<24} {:<24} {:<6}'.format('Major 1', 'Major 2', 'Count'))
+            print('{:<28} {:<28} {:<6}'.format('Major 1', 'Major 2', 'Count'))
         l = list(pairings.keys())
         l.sort()
         for key in l:
-            print('{:<24} '.format(key[0]), end='')
-            print('{:<24} '.format(key[1]), end='')
+            print('{:<28} '.format(key[0]), end='')
+            print('{:<28} '.format(key[1]), end='')
             print('{:<6}'.format(pairings[key]))
     else:
         __MakeMajorChart(o, 
@@ -28,12 +28,12 @@ def MinorPairings(o):
     pairings, counts = __CollectMinors(o)
     if not o['graph']:
         if not o['quiet']:
-            print('{:<24} {:<24} {:<6}'.format('Major', 'Minor', 'Count'))
+            print('{:<28} {:<28} {:<6}'.format('Major', 'Minor', 'Count'))
         l = list(pairings.keys())
         l.sort()
         for key in l:
-            print('{:<24} '.format(key[0]), end='')
-            print('{:<24} '.format(key[1]), end='')
+            print('{:<28} '.format(key[0]), end='')
+            print('{:<28} '.format(key[1]), end='')
             print('{:<6}'.format(pairings[key]))
         print()
         print('{:<24s}{:5}'.format('Majors with no minors', counts[0]))
