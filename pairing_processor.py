@@ -1,5 +1,29 @@
 import data_reader
+from counts_processor import Month
 from matplotlib import pyplot as plt
+
+def LocateMajors(o):
+    if o['do_Locate'] == '' and o['do_locate'] == '':
+        return
+    if o['do_Locate'] != '':
+        pairings = __CollectMajorEmails(o)
+        m = 'Major 2'
+        M = 'Major 1'
+    else:
+        pairings = __CollectMinorEmails(o)
+        m = 'Minor'
+        M = 'Major'
+    if not o['graph']:
+        if not o['quiet']:
+            month = Month(int(o['end_month'][-6:-4]))
+            year = int(int(o['end_month'][-11: -7]))
+            print(month, year)
+            print('{:<28} {:<28} {:<28}'.format(M, m, 'Email'))
+        pairings.sort()
+        for p in pairings:
+            print('{:<28} '.format(p[0]), end='')
+            print('{:<28} '.format(p[1]), end='')
+            print('{:<24}'.format(p[2]))
 
 def MajorPairings(o):
     if not o['do_Pairings']:
@@ -66,6 +90,68 @@ def __CollectMajors(o) -> dict:
         pairings[M] += 1
     return pairings
 
+
+def __CollectMajorEmails(o) -> list:
+    pairings = []
+    major1 = o['major']
+    major2 = o['do_Locate']
+    month = int(o['end_month'][-6:-4])
+    term = data_reader.DetermineTerm(month)
+    year = int(int(o['end_month'][-11: -7]))
+    d = o['student_data'][year][term][month]
+    for row in d:
+        M1 = row['Major 1 Description'].strip()
+        M2 = row['Major 2 Description'].strip()
+        if M1 != major1 and M2 != major1:
+            continue
+        M = (M2, M1) if M2 == major1 else (M1, M2)
+        if M[1] != major2:
+            continue
+        email = row['Carthage E-mail'].strip() if 'Carthage E-mail' in row.keys() else 'N/A'
+        if email != 'N/A':
+            email = row['First Name'].strip() + ' ' + \
+                    row['Last Name'].strip() + ' <' + \
+                    email + '>'
+        pairings.append((M[0], M[1], email))
+    return pairings
+
+
+def __CollectMinorEmails(o) -> list:
+    pairings = []
+    major = o['major']
+    minor = o['do_locate']
+    month = int(o['end_month'][-6:-4])
+    term = data_reader.DetermineTerm(month)
+    year = int(int(o['end_month'][-11: -7]))
+    d = o['student_data'][year][term][month]
+    minor_keys = [
+        'Minor 1 Description',
+        'Minor 2 Description',
+        'Minor 3 Description'
+    ]
+    for row in d:
+        M1 = row['Major 1 Description'].strip()
+        M2 = row['Major 2 Description'].strip()
+        if M1 != major and M2 != major:
+            continue
+        M = M2 if M2 == major else M1
+        m = ''
+        for mk in minor_keys:
+            if mk in row.keys() and row[mk] == minor:
+                m = row[mk]
+                break
+        if m == '':
+            continue
+
+        email = row['Carthage E-mail'].strip() if 'Carthage E-mail' in row.keys() else 'N/A'
+        if email != 'N/A':
+            email = row['First Name'].strip() + ' ' + \
+                row['Last Name'].strip() + ' <' + \
+                email + '>'
+        pairings.append((M, m, email))
+    return pairings
+
+
 def __CollectMinors(o) -> dict:
     pairings = {}
     counts = [ 0, 0, 0, 0]
@@ -120,7 +206,7 @@ def __MakeMajorChart(o, pairings, file_name, no_text, t):
         values.append(pairings[key])
         total += pairings[key]
     percentage = [ pairings[key] * 100.0 / total  for key in l]
-    labels = ['{0} - {1:1.2f} %'.format(s, p) for s, p in zip(minors, percentage) ]
+    labels = ['{0} - {1:2.1f}%'.format(s, p) for s, p in zip(minors, percentage) ]
     fig1, ax1 = plt.subplots()
     p = ax1.pie(values, startangle=90)
     ax1.axis('equal')

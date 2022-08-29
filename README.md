@@ -494,4 +494,50 @@ reporting month by month where `--breakdown` reports term by term.
 
 ### `--Pairings` and `--pairings`
 
-Thi
+### `--Locate` and `--locate`
+
+These are both text-only reports. They print your Majors if the
+student's second Major is given by `--Locate` or if the student
+is seeking the Minor given by `--locate`.
+
+Students printed in these reports are limited to only those that
+match `--major`.
+
+`--graph` is not honored by this report.
+
+`--term` is not honored by this report.
+
+The report is generated from `--end_month`.
+
+Note that some month reports lack students email addresses. If
+`end_month` is one of these, student's names will be listed but
+email information will be "N/A".
+
+Use case examples:
+
+- Do I have any Majors that are double majoring in Chemistry.
+
+- Do I have any Majors that are minoring in Physics.
+
+### `--reverse_Locate` and `--reverse_locate`
+
+NOT IMPLEMENTED YET
+
+These are text-only reports. They ignore `--major` and instead
+prints any Majors (`--reverse_Locate`) or other Minors
+(`--reverse_locate`) maintained by a student if the student matches
+the argument given to the active option.
+
+### Locate Reports Compared
+
+- `--Locate Physics` will find students matching both Physics and
+the value of `--major`.
+
+- `--locate Physics` will find students minoring in the specified
+subject and majoring in `--major`.
+
+- `--reverse_Locate Physics` will print majors and minors of students
+matching either Major to Physics.
+
+- `--reverse_locate Physics` will print majors and minors of students
+matching any minor to Physics.

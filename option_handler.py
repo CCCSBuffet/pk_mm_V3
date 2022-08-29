@@ -19,6 +19,10 @@ def __PrintHelp(print_newline = True):
 		('', '', ''),
 		('Pairings',    'none',      'emits double major counts'),
 		('pairings',    'none',      'emits counts of minors'),
+		('Locate',      'major 2',   'searches for students in both majors in end_month'),
+		('locate',      'minor',     'searches for students in major and minor in end_month'),
+		('reverse_Locate', 'major',  'ignores --major - find students with either major as specified'),
+		('reverse_locate', 'minor',  'ignores --major - find any student minoring as specified'),
 		('', '', ''),
 		('graph',       'none',      'switch from text to graph, if possible'),
 		('term',        'term',      'for some reports, consider only the given term'),
@@ -48,7 +52,11 @@ def CollectOptions() -> dict:
 		'quiet',
 		'Pairings',
 		'pairings',
-		'graph'
+		'graph',
+		'Locate=',
+		'locate=',
+		'reverse_Locate=',
+		'reverse_locate=',
 	]
 
 	o = { }
@@ -62,6 +70,10 @@ def CollectOptions() -> dict:
 	o['do_breakdown'] = False
 	o['do_Pairings'] = False
 	o['do_pairings'] = False
+	o['do_Locate'] = ''
+	o['do_locate'] = ''
+	o['do_reverse_Locate'] = ''
+	o['do_reverse_locate'] = ''
 	o['do_gpa'] = ''
 	o['gpa_le'] = ''
 	o['quiet'] = False
@@ -94,6 +106,14 @@ def CollectOptions() -> dict:
 			o['do_gpa'] = arg.strip()
 		elif opts in ('--gpa_le'):
 			o['gpa_le'] = arg.strip()
+		elif opts in ('--Locate'):
+			o['do_Locate'] = arg.strip()
+		elif opts in ('--locate'):
+			o['do_locate'] = arg.strip()
+		elif opts in ('--reverse_Locate'):
+			o['do_reverse_Locate'] = arg.strip()
+		elif opts in ('--reverse_locate'):
+			o['do_reverse_locate'] = arg.strip()
 		elif opts in ('--counts'):
 			o['do_counts'] = True
 		elif opts in ('--breakdown'):
@@ -124,19 +144,31 @@ def CollectOptions() -> dict:
 
 	allowable_cohorts = ('FF', 'SO', 'JR', 'SR', 'all')
 	if o['do_gpa'] != '' and o['do_gpa'] not in allowable_cohorts:
-		print('--gpa with invalid cohort', file=sys.stderr)
+		print('Error: --gpa with invalid cohort', file=sys.stderr)
 		__PrintHelp()
 		sys.exit(1)
 	
 	if o['do_gpa'] != '' and o['graph']:
-		print('--gpa does not have a corresponding graph', file=sys.stderr)
+		print('Error: --gpa does not have a corresponding graph', file=sys.stderr)
 		sys.exit(1)
 
 	if o['do_gpa'] == '' and o['gpa_le'] != '':
-		print('--gpa_le requires --gpa or --email', file=sys.stderr)
+		print('Error: --gpa_le requires --gpa or --email', file=sys.stderr)
 		sys.exit(1)
 
 	if o['minor'] == '':
 		o['minor'] = o['major']
+
+	if o['do_Locate'] != '' and o['do_locate'] != '':
+		print('Error: cannot specify by --Locate and --locate', file=sys.stderr)
+		sys.exit(1)
+
+	if (o['do_Locate'] != '' or o['do_locate'] != '') and o['graph']:
+		print('Error: no graph associated with --Locate or --locate', file=sys.stderr)
+		sys.exit(1)
+
+	if (o['do_reverse_Locate'] != '' or o['do_reverse_locate'] != '') and o['graph']:
+		print('Error: no graph associated with --reverse_Locate or --reverse_locate', file=sys.stderr)
+		sys.exit(1)
 
 	return o

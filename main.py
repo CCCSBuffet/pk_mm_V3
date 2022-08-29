@@ -19,6 +19,7 @@ def main():
 	counts_processor.Breakdown(options)
 	pairing_processor.MajorPairings(options)
 	pairing_processor.MinorPairings(options)
+	pairing_processor.LocateMajors(options)
 	gpa_processor.GPA(options)
 
 if __name__ == '__main__':

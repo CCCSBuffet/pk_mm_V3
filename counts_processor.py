@@ -24,7 +24,7 @@ def Counts(o):
 			print('{:5}{:5}{:5}{:5}{:5}'.format('FF', 'SO', 'JR', 'SR', 'TO'), end='')
 			print('{:5s}'.format('Pct F'))
 		for c in o['counts']:
-			print('{:4} {:<10s}'.format(c[0], __Month(c[2])), end='')
+			print('{:4} {:<10s}'.format(c[0], Month(c[2])), end='')
 			__PrintMajorMinor(c, 3)
 			__PrintMajorMinor(c, 4)
 			sum = c[5][0] + c[5][1]
@@ -35,7 +35,7 @@ def Counts(o):
 	else:
 		__MakeCohortSizePicture(o)
 
-def __Month(m) -> str:
+def	Month(m) -> str:
 	months = [None,
 		'January',
 		'February',
@@ -159,7 +159,7 @@ def __MakeAxes(c, ax, term):
 		months = [2, 3, 4, 5]
 	month_names = [ ]
 	for m in months:
-		month_names.append(__Month(m))
+		month_names.append(Month(m))
 	rows = __GetRows(c, months)
 	years = list(rows.keys())
 	years.sort()
