@@ -20,6 +20,7 @@ def main():
 	pairing_processor.MajorPairings(options)
 	pairing_processor.MinorPairings(options)
 	pairing_processor.LocateMajors(options)
+	pairing_processor.ReverseLocate(options)
 	gpa_processor.GPA(options)
 
 if __name__ == '__main__':

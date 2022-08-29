@@ -33,7 +33,7 @@ def __PrintHelp(print_newline = True):
 
 	print('Usage:')
 	for l in options:
-		print('{:<14s}{:<21s}{:s}'.format(l[0], l[1], l[2]))
+		print('{:<15s}{:<21s}{:s}'.format(l[0], l[1], l[2]))
 
 def CollectOptions() -> dict:
 	short_opts = ''

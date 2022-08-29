@@ -2,6 +2,17 @@ import data_reader
 from counts_processor import Month
 from matplotlib import pyplot as plt
 
+__minor_keys = [
+    'Minor 1 Description',
+    'Minor 2 Description',
+    'Minor 3 Description'
+]
+
+def ReverseLocate(o):
+    if o['do_reverse_Locate'] == '' and o['do_reverse_locate'] == '':
+        return
+    pass
+
 def LocateMajors(o):
     if o['do_Locate'] == '' and o['do_locate'] == '':
         return
@@ -74,7 +85,8 @@ def MinorPairings(o):
 
 def __CollectMajors(o) -> dict:
     pairings = {}
-    major = o['major']
+    major = o['major'] if o['do_reverse_Locate'] == '' \
+            else o['do_reverse_Locate']
     month = int(o['end_month'][-6:-4])
     term = data_reader.DetermineTerm(month)
     year  = int(int(o['end_month'][-11: -7]))
@@ -124,11 +136,6 @@ def __CollectMinorEmails(o) -> list:
     term = data_reader.DetermineTerm(month)
     year = int(int(o['end_month'][-11: -7]))
     d = o['student_data'][year][term][month]
-    minor_keys = [
-        'Minor 1 Description',
-        'Minor 2 Description',
-        'Minor 3 Description'
-    ]
     for row in d:
         M1 = row['Major 1 Description'].strip()
         M2 = row['Major 2 Description'].strip()
@@ -136,7 +143,7 @@ def __CollectMinorEmails(o) -> list:
             continue
         M = M2 if M2 == major else M1
         m = ''
-        for mk in minor_keys:
+        for mk in __minor_keys:
             if mk in row.keys() and row[mk] == minor:
                 m = row[mk]
                 break
