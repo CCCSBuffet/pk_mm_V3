@@ -356,7 +356,7 @@ person.
 
 `--gpa_le` is honored.
 
-Usage examples:
+Use case examples:
 
 - Who were your majors in a certain month in the past?
 
@@ -369,7 +369,129 @@ honors?
 
 ### `--counts`
 
+This report breaks out counts of each cohort over the specified months.
+These counts are provided for both Majors and Minors. Also emitted is
+an overall percentage of Female participation within the named
+department (that is, the value provided indicates a percentage which
+is reflects the Major and Minor combined).
+
+For example:
+
+```text
+python3 main.py --folder csv --major "Computer Science" --counts --start_month MM-2022-01
+                  Majors                   Minors              
+Year Month        FF   SO   JR   SR   TO   FF   SO   JR   SR   TO   Pct F
+2022 January      29   14   21   23   87    7    3    4    5   19   20.75
+2022 February     26   11   20   25   82    8    3    4    5   20   20.59
+2022 March        26   11   21   25   83    9    3    4    7   23   21.70
+2022 April        27   11   22   24   84    8    3    3    8   22   22.64
+2022 May          26    8   20   30   84    8    2    2   10   22   22.64
+2022 June         48   19   23   16  106   11    6    3    5   25   20.61
+2022 July         49   19   23   16  107   17    6    3    5   31   22.30
+2022 August       46   19   23   16  104   19    6    3    5   33   21.74
+```
+
+`--term` is not honored by this report.
+
+`--graph`  produces a graph broken out over terms.
+
+```text
+python3 main.py --folder csv --major "Computer Science" --counts --graph    
+2018 6 was missing
+2018 7 was missing
+2018 11 was missing
+2019 7 was missing
+Cohort Sizes by Month image saved with file name: majors_total_yoy.png
+```
+
+`--quiet` is honored by this report.
+
+The graph looks like this:
+
+![mtyoy.png](./mtyoy.png)
+
+Remember that the Fall of year N corresponds to the year N - 1.
+
+Notice the handling of missing months such as November of 2018. Also
+note the differences in the vertical axis. This is currently a known
+shortcoming which can be remedied in the future.
+
+Use case examples:
+
+- How many Majors and Minors where there in April 2020?
+
+- How does this year compare to previous years?
+
+- How does graduations in May impact the Major or Minor?
+
+- How does enrollment bump up during the Summer?
+
+There is broad overlap with the `--breakdown` report with `--counts`
+reporting month by month where `--breakdown` reports term by term.
+
 ### `--breakdown`
+
+This report is term-aware. It will average each month in a given term
+to produce a view of the size of the selected Major in that term. This
+is done in part to make terms containing missing months comparable to
+terms with all its months found.
+
+```text
+ python3 main.py --folder csv --major "Computer Science" --breakdown 2> /dev/null
+Year Term         FF     SO     JR     SR  Total
+2018 j-term       27      8     21     19     75
+2018 spring       28      9     20     20     76
+2018 summer       38     20      9     24     91
+2018 fall         33     19      9     24     85
+2019 j-term       29     15     11     25     80
+2019 spring       23     14     10     28     75
+2019 summer       32     16     16      9     74
+2019 fall         32     18     16     10     76
+2020 j-term       27     11     16     17     71
+2020 spring       25     12     16     14     67
+2020 summer       46      9     15     18     88
+2020 fall         29     20     19     17     85
+2021 j-term       24     15     21     21     81
+2021 spring       17     14     22     22     76
+2021 summer       28     20     24     17     90
+2021 fall         32     21     22     18     93
+2022 j-term       29     14     21     23     87
+2022 spring       26     10     21     26     83
+2022 summer       48     19     23     16    106
+```
+
+`--term` is honored by this report.
+
+```text
+python3 main.py --folder csv --major "Computer Science" --breakdown --term summer 2> /dev/null
+Year Term         FF     SO     JR     SR  Total
+2018 summer       38     20      9     24     91
+2019 summer       32     16     16      9     74
+2020 summer       46      9     15     18     88
+2021 summer       28     20     24     17     90
+2022 summer       48     19     23     16    106
+```
+
+`--graph` is honored by this report.
+
+```text
+python3 main.py --folder csv --major "Computer Science" --breakdown --term summer --graph 2> /dev/null
+Cohorts by Term image saved with file name: cohorts_by_term.png
+```
+
+The resulting image looks like this:
+
+![cbt.png](./cbt.png)
+
+This report honors `--start_month` and `--end_month`.
+
+Use case examples:
+
+- I need a nice graph showing trends over time.
+
+There is broad overlap with the `--counts` report with `--counts`
+reporting month by month where `--breakdown` reports term by term.
 
 ### `--Pairings` and `--pairings`
 
+Thi
