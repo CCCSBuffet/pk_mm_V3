@@ -219,14 +219,15 @@ def Breakdown(o):
 	# ((2018, 'j-term'), {'FF': 27.0, 'SO': 8.0, 'JR': 21.0, 'SR': 19.0})
 	if not o['graph']:
 		if not o['quiet']:
-			print('{:4s} {:<8s} {:>6s} {:>6s} {:>6s} {:>6s} '.format(
-				'Year', 'Term', 'FF', 'SO', 'JR', 'SR'))
+			print('{:4s} {:<8s} {:>6s} {:>6s} {:>6s} {:>6s} {:>6}'.format(
+				'Year', 'Term', 'FF', 'SO', 'JR', 'SR', 'Total'))
 		for d in data:
 			if o['term'] != '' and d[0][1] != o['term']:
 				continue
 			print('{:4} {:<8s} '.format(d[0][0], d[0][1]), end='')
 			print('{:>6.0f} {:>6.0f} '.format(d[1]['FF'], d[1]['SO']), end='')
-			print('{:>6.0f} {:>6.0f}'.format(d[1]['JR'], d[1]['SR']))
+			print('{:>6.0f} {:>6.0f} '.format(d[1]['JR'], d[1]['SR']), end='')
+			print('{:>6.0f}'.format(sum(d[1].values())))
 	else:
 		__MakeBreakDownChart(o, data)
 
