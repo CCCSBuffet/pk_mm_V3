@@ -10,6 +10,13 @@ def __GetCohort(al) -> str:
 		return 'Juniors'
 	return 'Seniors'
 
+def EMAIL(o):
+	if o['do_email'] == '' and o['do_EMAIL'] == '':
+		return
+	data = __CollectEmail(o)
+	for d in data:
+		print(d)
+
 def GPA(o):
 	if o['do_gpa'] == '':
 		return
@@ -46,6 +53,24 @@ def __GetAL(row) -> str:
 	if academic_level == 'GD':
 		academic_level = 'SR'
 	return academic_level
+
+def __CollectEmail(o):
+	discipline = o['major']
+	month = int(o['end_month'][-6:-4])
+	term = data_reader.DetermineTerm(month)
+	year = int(int(o['end_month'][-11: -7]))
+	d = o['student_data'][year][term][month]
+	data = []
+	for row in d:
+		M1 = row['Major 1 Description'].strip()
+		M2 = row['Major 2 Description'].strip()
+		m1 = row['Minor 1 Description'].strip()
+		m2 = row['Minor 2 Description'].strip()
+		m3 = row['Minor 3 Description'].strip()
+		if (o['do_EMAIL'] and (M1 == discipline or M2 == discipline)) or \
+		   (o['do_email'] and (m1 == discipline or m2 == discipline or m2 == discipline)):
+			data.append(row['Carthage E-mail'].strip())
+	return data
 
 def __CollectGPA(o):
 	gpa = {

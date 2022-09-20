@@ -22,6 +22,7 @@ def main():
 	pairing_processor.LocateMajors(options)
 	pairing_processor.ReverseLocate(options)
 	gpa_processor.GPA(options)
+	gpa_processor.EMAIL(options)
 
 if __name__ == '__main__':
 	main()

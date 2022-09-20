@@ -15,7 +15,8 @@ def __PrintHelp(print_newline = True):
 		('breakdown',   'none',      'emits breakdown of cohorts'),
 		('gpa',         'cohort',    'all, FF, SO, JR, SR'),
 		('gpa_le',      'float',     'modifies --gpa to show only GPAs <= value'),
-		('email',       'cohort',    'synonym for --gpa'),
+		('email',       'cohort',    'email addresses of minors'),
+		('EMAIL',       'cohort',    'email addresses of majors'),
 		('', '', ''),
 		('Pairings',    'none',      'emits double major counts'),
 		('pairings',    'none',      'emits counts of minors'),
@@ -45,6 +46,7 @@ def CollectOptions() -> dict:
 		'end_month=',
 		'gpa=',
 		'email=',
+		'EMAIL=',
 		'gpa_le=',
 		'counts',
 		'breakdown',
@@ -76,6 +78,8 @@ def CollectOptions() -> dict:
 	o['do_reverse_locate'] = ''
 	o['do_gpa'] = ''
 	o['gpa_le'] = ''
+	o['do_email'] = ''
+	o['do_EMAIL'] = ''
 	o['quiet'] = False
 	o['graph'] = False
 
@@ -102,7 +106,7 @@ def CollectOptions() -> dict:
 			o['end_month'] = arg.strip() + '.csv'
 		elif opts in ('--term'):
 			o['term'] = arg.strip()
-		elif opts in ('--gpa', '--email'):
+		elif opts in ('--gpa'):
 			o['do_gpa'] = arg.strip()
 		elif opts in ('--gpa_le'):
 			o['gpa_le'] = arg.strip()
@@ -126,6 +130,10 @@ def CollectOptions() -> dict:
 			o['do_Pairings'] = True
 		elif opts in ('--pairings'):
 			o['do_pairings'] = True
+		elif opts in ('--email'):
+			o['do_email'] = arg.strip()
+		elif opts in ('--EMAIL'):
+			o['do_EMAIL'] = arg.strip()
 
 	if o['folder'] == '':
 		print('Error: --folder must be specified.', file=sys.stderr)
@@ -148,6 +156,20 @@ def CollectOptions() -> dict:
 		__PrintHelp()
 		sys.exit(1)
 	
+	if o['do_email'] != '' and o['do_email'] not in allowable_cohorts:
+		print('Error: --email with invalid cohort', file=sys.stderr)
+		__PrintHelp()
+		sys.exit(1)
+
+	if o['do_EMAIL'] != '' and o['do_EMAIL'] not in allowable_cohorts:
+		print('Error: --EMAIL with invalid cohort', file=sys.stderr)
+		__PrintHelp()
+		sys.exit(1)
+
+	if (o['do_email'] or o['do_EMAIL']) and o['graph']:
+		print('Error: neither --email nor --EMAIL have graphs', file=sys.stderr)
+		sys.exit(1)
+		
 	if o['do_gpa'] != '' and o['graph']:
 		print('Error: --gpa does not have a corresponding graph', file=sys.stderr)
 		sys.exit(1)

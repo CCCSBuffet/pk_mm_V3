@@ -11,7 +11,45 @@ __minor_keys = [
 def ReverseLocate(o):
     if o['do_reverse_Locate'] == '' and o['do_reverse_locate'] == '':
         return
-    pass
+    if o['do_reverse_Locate']:
+        data = __CollectAnyMajor(o)
+        if not o['quiet']:
+            print('{:<28s} {:<28s}'.format('Major', 'Major'), end='')
+            print('{:<10}'.format('ID'), end='')
+            print()
+        for row in data:
+            print('{:<28s} {:<28s}'.format(row[0][0], row[0][1]), end='')
+            print('{:<10}'.format(row[2][0]), end='')
+            print('{0} {1}'.format(row[2][1], row[2][2]), end='')
+            print('{0} {1} {2}'.format(row[1][0], row[1][1], row[1][2]), end='')
+            print()
+
+def __CollectAnyMajor(o) -> list:
+    data = []
+    major = o['do_reverse_Locate']
+    month = int(o['end_month'][-6:-4])
+    term = data_reader.DetermineTerm(month)
+    year  = int(int(o['end_month'][-11: -7]))
+    d = o['student_data'][year][term][month]
+    for row in d:
+        M1 = row['Major 1 Description'].strip()
+        M2 = row['Major 2 Description'].strip()
+        if M1 != major and M2 != major:
+            continue
+        M = (M2, M1) if M2 == major else (M1, M2)
+        m = (
+            row['Minor 1 Description'],
+            row['Minor 2 Description'],
+            row['Minor 3 Description'] if 'Minor 3 Description' in row.keys() else ''
+        )
+        email = row['Carthage E-mail'].strip() if 'Carthage E-mail' in row.keys() else 'N/A'
+        if '\ufeffStudent ID Number' in row.keys():
+            id_number = row['\ufeffStudent ID Number']
+        else:
+            id_number = row['Student ID Number']
+        E = (id_number, row['Last Name'], row['First Name'], email)
+        data.append((M, m, E))
+    return data
 
 def LocateMajors(o):
     if o['do_Locate'] == '' and o['do_locate'] == '':

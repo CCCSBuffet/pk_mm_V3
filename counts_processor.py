@@ -147,19 +147,32 @@ def __GetTotal(d) -> int:
 		sum += c if c != None else 0
 	return sum
 
-def __MakeAxes(c, ax, term):
-	ax.set_title(term)
+def MonthsInTerm(term):
 	if term == 'Fall':
 		months = [9, 10, 11, 12]
 	elif term == 'J-Term':
-		months = [ 1 ]
+		months = [1]
 	elif term == 'Summer':
 		months = [6, 7, 8]
 	else:
 		months = [2, 3, 4, 5]
+	return months
+
+def __GetRange(c, term):
+	months = MonthsInTerm(term)
+	rows = __GetRows(c, months)
+	min = 999999
+	max = -min
+	for row in rows:
+		print(rows)
+
+def __MakeAxes(c, ax, term):
+	ax.set_title(term)
+	months = MonthsInTerm(term)
 	month_names = [ ]
 	for m in months:
 		month_names.append(Month(m))
+	#rng = __GetRange(c, )
 	rows = __GetRows(c, months)
 	years = list(rows.keys())
 	years.sort()
