@@ -1,5 +1,13 @@
+from calendar import month
 from matplotlib import pyplot as plt
 import numpy as np
+
+def __CountsHeading():
+	print('{:18s}{:25s}{:20s}'.format(' ', 'Majors', 'Minors'))
+	print('{:4} {:<13s}'.format('Year', 'Month'), end='')
+	print('{:5}{:5}{:5}{:5}{:5}'.format('FF', 'SO', 'JR', 'SR', 'TO'), end='')
+	print('{:5}{:5}{:5}{:5}{:5}'.format('FF', 'SO', 'JR', 'SR', 'TO'), end='')
+	print('{:5s}'.format('Pct F'))
 
 def Counts(o):
 	if not o['do_counts']:
@@ -18,20 +26,30 @@ def Counts(o):
 	
 	if not o['graph']:
 		if not o['quiet']:
-			print('{:18s}{:25s}{:20s}'.format(' ', 'Majors', 'Minors'))
-			print('{:4} {:<13s}'.format('Year', 'Month'), end='')
-			print('{:5}{:5}{:5}{:5}{:5}'.format('FF', 'SO', 'JR', 'SR', 'TO'), end='')
-			print('{:5}{:5}{:5}{:5}{:5}'.format('FF', 'SO', 'JR', 'SR', 'TO'), end='')
-			print('{:5s}'.format('Pct F'))
+			__CountsHeading()
+		line_counter = 0
 		for c in o['counts']:
-			print('{:4} {:<10s}'.format(c[0], Month(c[2])), end='')
-			__PrintMajorMinor(c, 3)
-			__PrintMajorMinor(c, 4)
+			line_counter += 1
+			if line_counter % 20 == 0 and not o['quiet']:
+				__CountsHeading()
+			if not o['csv']:
+				print('{:4} {:<10s}'.format(c[0], Month(c[2])), end='')
+			else:
+				print('{:},{:},'.format(c[0], Month(c[2])), end='')
+			__PrintMajorMinor(o, c, 3)
+			__PrintMajorMinor(o, c, 4)
 			sum = c[5][0] + c[5][1]
 			if sum != 0:
-				print('   {:5.2f}'.format(c[5][0] / sum * 100))
+				value = c[5][0] / sum * 100
+				if not o['csv']:
+					print('   {:5.2f}'.format(value))
+				else:
+					print('{:5.2f}'.format(value))
 			else:
-				print('   N/A')
+				if not o['csv']:
+					print('   N/A')
+				else:
+					print('N/A')
 	else:
 		__MakeCohortSizePicture(o)
 
@@ -107,16 +125,17 @@ def __GatherAllCounts(o):
 	o['counts'] = counts
 
 
-def __PrintMajorMinor(c, index):
+def __PrintMajorMinor(o, c, index):
 	academic_levels = ['FF', 'SO', 'JR', 'SR']
+	fmt = '{:},' if o['csv'] else '{:5}'
 	sum = 0
 	for al in academic_levels:
 		if al in c[index].keys():
 			sum += c[index][al]
-			print('{:5}'.format(c[index][al]), end='')
+			print(fmt.format(c[index][al]), end='')
 		else:
-			print('{:>5}'.format('N/A'), end='')
-	print('{:>5}'.format(sum if sum > 0 else 'N/A'), end='')
+			print(fmt.format('N/A'), end='')
+	print(fmt.format(sum if sum > 0 else 'N/A,'), end='')
 
 
 # plt.plot(x_axis, y_axis, label=str(current_year), marker='o')
@@ -236,10 +255,17 @@ def Breakdown(o):
 		for d in data:
 			if o['term'] != '' and d[0][1] != o['term']:
 				continue
-			print('{:4} {:<8s} '.format(d[0][0], d[0][1]), end='')
-			print('{:>6.0f} {:>6.0f} '.format(d[1]['FF'], d[1]['SO']), end='')
-			print('{:>6.0f} {:>6.0f} '.format(d[1]['JR'], d[1]['SR']), end='')
-			print('{:>6.0f}'.format(sum(d[1].values())))
+			if not o['csv']:
+				print('{:4} {:<8s} '.format(d[0][0], d[0][1]), end='')
+				print('{:>6.0f} {:>6.0f} '.format(d[1]['FF'], d[1]['SO']), end='')
+				print('{:>6.0f} {:>6.0f} '.format(d[1]['JR'], d[1]['SR']), end='')
+				print('{:>6.0f}'.format(sum(d[1].values())))
+			else:
+				print('{:},{:},'.format(d[0][0], d[0][1]), end='')
+				print('{:0.0f},{:0.0f},'.format(d[1]['FF'], d[1]['SO']), end='')
+				print('{:0.0f}{:0.0f},'.format(d[1]['JR'], d[1]['SR']), end='')
+				print('{:0.0f}'.format(sum(d[1].values())))
+			
 	else:
 		__MakeBreakDownChart(o, data)
 

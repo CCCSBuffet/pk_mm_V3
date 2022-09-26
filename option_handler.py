@@ -28,6 +28,7 @@ def __PrintHelp(print_newline = True):
 		('graph',       'none',      'switch from text to graph, if possible'),
 		('term',        'term',      'for some reports, consider only the given term'),
 		('quiet',       'none',      'if given, text reports do not have headers'),
+		('csv',         'none',      'give for text reports destined for Excel, etc.'),
 	]
 	if print_newline:
 		print()
@@ -59,6 +60,7 @@ def CollectOptions() -> dict:
 		'locate=',
 		'reverse_Locate=',
 		'reverse_locate=',
+		'csv',
 	]
 
 	o = { }
@@ -82,6 +84,7 @@ def CollectOptions() -> dict:
 	o['do_EMAIL'] = ''
 	o['quiet'] = False
 	o['graph'] = False
+	o['csv'] = False
 
 	try:
 		opts, _ = getopt(sys.argv[1:], short_opts, long_opts)
@@ -134,6 +137,9 @@ def CollectOptions() -> dict:
 			o['do_email'] = arg.strip()
 		elif opts in ('--EMAIL'):
 			o['do_EMAIL'] = arg.strip()
+		elif opts in ('--csv'):
+			o['csv'] = True
+			o['quiet'] = True
 
 	if o['folder'] == '':
 		print('Error: --folder must be specified.', file=sys.stderr)
