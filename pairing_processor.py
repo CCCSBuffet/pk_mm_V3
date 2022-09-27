@@ -70,9 +70,14 @@ def LocateMajors(o):
             print('{:<28} {:<28} {:<28}'.format(M, m, 'Email'))
         pairings.sort()
         for p in pairings:
-            print('{:<28} '.format(p[0]), end='')
-            print('{:<28} '.format(p[1]), end='')
-            print('{:<24}'.format(p[2]))
+            if o['csv']:
+                print('{:},'.format(p[0]), end='')
+                print('{:},'.format(p[1]), end='')
+                print('{:}'.format(p[2]))
+            else:
+                print('{:<28} '.format(p[0]), end='')
+                print('{:<28} '.format(p[1]), end='')
+                print('{:<24}'.format(p[2]))
 
 def MajorPairings(o):
     if not o['do_Pairings']:
