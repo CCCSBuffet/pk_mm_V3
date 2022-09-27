@@ -266,6 +266,12 @@ that comprise the term.
 For textual reports, specifying `--quiet` causes the report to
 lack its headings. This might make import into Excel easier.
 
+### `csv`
+
+Implies `quiet`.
+
+If given, the reports are made into CSV data without pretty printing.
+
 ## Error Handling
 
 There are two kinds of text output (in common between Windows,
