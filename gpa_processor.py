@@ -35,15 +35,26 @@ def GPA(o):
 			print('{:<16s}'.format('Email'))
 		for s in data[al]:
 			if float(s[4]) <= gpa_limiter:
-				print('{:<8s}'.format(s[0]), end='')
-				print('{:<20s}'.format(s[1]), end='')
-				print('{:<20s}'.format(s[2]), end='')
-				print('{:<8s}'.format(s[3]), end='')
-				print('{:<8s}'.format(s[4]), end='')
-				if s[5] == 'N/A':
-					print(s[5])
+				if o['csv']:
+					print('{:},'.format(s[0]), end='')
+					print('{:},'.format(s[1]), end='')
+					print('{:},'.format(s[2]), end='')
+					print('{:},'.format(s[3]), end='')
+					print('{:},'.format(s[4]), end='')
+					if s[5] == 'N/A':
+						print(s[5])
+					else:
+						print('{0}'.format(s[2] + ' ' + s[1] + ' <' + s[5] + '>'))
 				else:
-					print('{0}'.format(s[2] + ' ' + s[1] + '<' + s[5] + '>'))
+					print('{:<8s}'.format(s[0]), end='')
+					print('{:<20s}'.format(s[1]), end='')
+					print('{:<20s}'.format(s[2]), end='')
+					print('{:<8s}'.format(s[3]), end='')
+					print('{:<8s}'.format(s[4]), end='')
+					if s[5] == 'N/A':
+						print(s[5])
+					else:
+						print('{0}'.format(s[2] + ' ' + s[1] + ' <' + s[5] + '>'))
 
 
 def __GetAL(row) -> str:
