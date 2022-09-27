@@ -84,9 +84,14 @@ def MajorPairings(o):
         l = list(pairings.keys())
         l.sort()
         for key in l:
-            print('{:<28} '.format(key[0]), end='')
-            print('{:<28} '.format(key[1]), end='')
-            print('{:<6}'.format(pairings[key]))
+            if o['csv']:
+                print('{:},'.format(key[0]), end='')
+                print('{:}, '.format(key[1]), end='')
+                print('{:}'.format(pairings[key]))
+            else:
+                print('{:<28} '.format(key[0]), end='')
+                print('{:<28} '.format(key[1]), end='')
+                print('{:<6}'.format(pairings[key]))
     else:
         __MakeMajorChart(o, 
             pairings, 
@@ -105,14 +110,20 @@ def MinorPairings(o):
         l = list(pairings.keys())
         l.sort()
         for key in l:
-            print('{:<28} '.format(key[0]), end='')
-            print('{:<28} '.format(key[1]), end='')
-            print('{:<6}'.format(pairings[key]))
-        print()
-        print('{:<24s}{:5}'.format('Majors with no minors', counts[0]))
-        print('{:<24s}{:5}'.format('Majors with one minors', counts[1]))
-        print('{:<24s}{:5}'.format('Majors with two minors', counts[2]))
-        print('{:<24s}{:5}'.format('Majors with three minors', counts[3]))
+            if o['csv']:
+                print('{:},'.format(key[0]), end='')
+                print('{:},'.format(key[1]), end='')
+                print('{:}'.format(pairings[key]))
+            else:
+                print('{:<28} '.format(key[0]), end='')
+                print('{:<28} '.format(key[1]), end='')
+                print('{:<6}'.format(pairings[key]))
+        if not o['quiet']:
+            print()
+            print('{:<24s}{:5}'.format('Majors with no minors', counts[0]))
+            print('{:<24s}{:5}'.format('Majors with one minors', counts[1]))
+            print('{:<24s}{:5}'.format('Majors with two minors', counts[2]))
+            print('{:<24s}{:5}'.format('Majors with three minors', counts[3]))
     else:
         __MakeMajorChart(o, 
             pairings, 
