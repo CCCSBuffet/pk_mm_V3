@@ -12,8 +12,8 @@ def __PrintHelp(print_newline = True):
 		('end_month',   'file name', 'for reports that have a definable range of months, this is the end'),
 		('', '', ''),
 		('counts',      'none',      'emits counts of majors and minors broken down by academic level'),
-		('breakdown',   'none',      'emits breakdown of cohorts'),
-		('gpa',         'cohort',    'all, FF, SO, JR, SR'),
+		('breakdown',   'none',      'emits counts broken down by cohort'),
+		('gpa',         'cohort',    'all, FF, SO, JR, or SR'),
 		('gpa_le',      'float',     'modifies --gpa to show only GPAs <= value'),
 		('email',       'cohort',    'email addresses of minors'),
 		('EMAIL',       'cohort',    'email addresses of majors'),
@@ -156,21 +156,9 @@ def CollectOptions() -> dict:
 		print('Error: term must be one of', terms, file=sys.stderr)
 		sys.exit(1)
 
-	allowable_cohorts = ('FF', 'SO', 'JR', 'SR', 'all')
-	if o['do_gpa'] != '' and o['do_gpa'] not in allowable_cohorts:
-		print('Error: --gpa with invalid cohort', file=sys.stderr)
-		__PrintHelp()
-		sys.exit(1)
-	
-	if o['do_email'] != '' and o['do_email'] not in allowable_cohorts:
-		print('Error: --email with invalid cohort', file=sys.stderr)
-		__PrintHelp()
-		sys.exit(1)
-
-	if o['do_EMAIL'] != '' and o['do_EMAIL'] not in allowable_cohorts:
-		print('Error: --EMAIL with invalid cohort', file=sys.stderr)
-		__PrintHelp()
-		sys.exit(1)
+	__CheckCohort(o, 'do_gpa', '--gpa')
+	__CheckCohort(o, 'do_email', '--email')
+	__CheckCohort(o, 'do_EMAIL', '--EMAIL')
 
 	if (o['do_email'] or o['do_EMAIL']) and o['graph']:
 		print('Error: neither --email nor --EMAIL have graphs', file=sys.stderr)
@@ -188,7 +176,7 @@ def CollectOptions() -> dict:
 		o['minor'] = o['major']
 
 	if o['do_Locate'] != '' and o['do_locate'] != '':
-		print('Error: cannot specify by --Locate and --locate', file=sys.stderr)
+		print('Error: cannot specify both --Locate and --locate', file=sys.stderr)
 		sys.exit(1)
 
 	if (o['do_Locate'] != '' or o['do_locate'] != '') and o['graph']:
@@ -200,3 +188,12 @@ def CollectOptions() -> dict:
 		sys.exit(1)
 
 	return o
+
+def	__CheckCohort(o, tag, legend):
+	allowable_cohorts = ('FF', 'SO', 'JR', 'SR', 'all')
+	if o[tag] != '' and o[tag] not in allowable_cohorts:
+		print('Error:', legend, 'with invalid cohort', file=sys.stderr)
+		print('Cohort must be one of all, FR, SO, JR or SR', file=sys.stderr)
+		__PrintHelp()
+		sys.exit(1)
+
