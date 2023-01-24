@@ -73,10 +73,13 @@ def LocateMajors(o):
             if o['csv']:
                 print('{:},'.format(p[0]), end='')
                 print('{:},'.format(p[1]), end='')
+                print('{:},'.format(p[3]), end='')
                 print('{:}'.format(p[2]))
             else:
+                print(p)
                 print('{:<28} '.format(p[0]), end='')
                 print('{:<28} '.format(p[1]), end='')
+                print('{:<4}'.format(p[3]), end='')
                 print('{:<24}'.format(p[2]))
 
 def MajorPairings(o):
@@ -178,7 +181,7 @@ def __CollectMajorEmails(o) -> list:
             email = row['First Name'].strip() + ' ' + \
                     row['Last Name'].strip() + ' <' + \
                     email + '>'
-        pairings.append((M[0], M[1], email))
+        pairings.append((M[0], M[1], email, row['Classification Code']))
     return pairings
 
 
@@ -209,7 +212,7 @@ def __CollectMinorEmails(o) -> list:
             email = row['First Name'].strip() + ' ' + \
                 row['Last Name'].strip() + ' <' + \
                 email + '>'
-        pairings.append((M, m, email))
+        pairings.append((M, m, email, row['Classification Code']))
     return pairings
 
 
