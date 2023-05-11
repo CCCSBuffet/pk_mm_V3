@@ -20,7 +20,11 @@ def EMAIL(o):
 def GPA(o):
 	if o['do_gpa'] == '':
 		return
-	gpa_limiter = 100. if o['gpa_le'] == '' else float(o['gpa_le'])
+	gpa_limiter = 100
+	if o['gpa_lt'] != '':
+		gpa_limiter = float(o['gpa_lt'])
+	elif o['gpa_ge'] != '':
+		gpa_limiter = float(o['gpa_ge'])
 	data = __CollectGPA(o)
 	for al in data.keys():
 		if o['do_gpa'] != 'all' and o['do_gpa'] != al:
@@ -34,7 +38,8 @@ def GPA(o):
 			print('{:<8s}'.format('GPA'), end='')
 			print('{:<16s}'.format('Email'))
 		for s in data[al]:
-			if float(s[4]) <= gpa_limiter:
+			if  (o['gpa_lt'] != '' and float(s[4]) < gpa_limiter) or \
+				(o['gpa_ge'] != '' and float(s[4]) >= gpa_limiter):
 				if o['csv']:
 					print('{:},'.format(s[0]), end='')
 					print('{:},'.format(s[1]), end='')

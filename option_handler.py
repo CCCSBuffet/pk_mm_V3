@@ -14,7 +14,8 @@ def __PrintHelp(print_newline = True):
 		('counts',      'none',      'emits counts of majors and minors broken down by academic level'),
 		('breakdown',   'none',      'emits counts broken down by cohort'),
 		('gpa',         'cohort',    'all, FF, SO, JR, or SR'),
-		('gpa_le',      'float',     'modifies --gpa to show only GPAs <= value'),
+		('gpa_lt',      'float',     'modifies --gpa to show only GPAs < value'),
+        ('gpa_ge',      'float',     'modifies --gpa to show only GPAs >= value'),
 		('email',       'cohort',    'email addresses of minors'),
 		('EMAIL',       'cohort',    'email addresses of majors'),
 		('', '', ''),
@@ -48,7 +49,8 @@ def CollectOptions() -> dict:
 		'gpa=',
 		'email=',
 		'EMAIL=',
-		'gpa_le=',
+		'gpa_lt=',
+        'gpa_ge=',
 		'counts',
 		'breakdown',
 		'term=',
@@ -79,7 +81,8 @@ def CollectOptions() -> dict:
 	o['do_reverse_Locate'] = ''
 	o['do_reverse_locate'] = ''
 	o['do_gpa'] = ''
-	o['gpa_le'] = ''
+	o['gpa_lt'] = ''
+	o['gpa_ge'] = ''
 	o['do_email'] = ''
 	o['do_EMAIL'] = ''
 	o['quiet'] = False
@@ -111,8 +114,10 @@ def CollectOptions() -> dict:
 			o['term'] = arg.strip()
 		elif opts in ('--gpa'):
 			o['do_gpa'] = arg.strip()
-		elif opts in ('--gpa_le'):
-			o['gpa_le'] = arg.strip()
+		elif opts in ('--gpa_lt'):
+			o['gpa_lt'] = arg.strip()
+		elif opts in ('--gpa_ge'):
+			o['gpa_ge'] = arg.strip()
 		elif opts in ('--Locate'):
 			o['do_Locate'] = arg.strip()
 		elif opts in ('--locate'):
@@ -148,6 +153,11 @@ def CollectOptions() -> dict:
 
 	if o['major'] == '':
 		print('Error: --major must be specified.', file=sys.stderr)
+		__PrintHelp()
+		sys.exit(1)
+
+	if o['gpa_lt'] != '' and o['gpa_ge'] != '':
+		print('Error: --gpa_lt and --gpa_ge cannot be used together.', file=sys.stderr)
 		__PrintHelp()
 		sys.exit(1)
 
